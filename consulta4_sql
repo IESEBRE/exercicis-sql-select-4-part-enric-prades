@@ -1,0 +1,88 @@
+1 1 SELECT L.LOCATION_ID, COUNT(D.DEPARTMENT_ID) AS NUM_DEPARTMENTS
+  2  FROM LOCATIONS L
+  3  LEFT JOIN DEPARTMENTS D ON L.LOCATION_ID = D.LOCATION_ID
+  4  WHERE D.DEPARTMENT_ID IS NOT NULL
+  5* GROUP BY L.LOCATION_ID;
+  
+2 1 1SELECT L.LOCATION_ID, COUNT(D.DEPARTMENT_ID) AS NUM_DEPARTMENTS
+  2  FROM LOCATIONS L
+  3  LEFT JOIN DEPARTMENTS D ON L.LOCATION_ID = D.LOCATION_ID
+  4* GROUP BY L.LOCATION_ID;
+3 SELECT L.LOCATION_ID, COUNT(D.DEPARTMENT_ID) AS NUM_DEPARTMENTS
+FROM LOCATIONS L
+LEFT JOIN DEPARTMENTS D ON L.LOCATION_ID = D.LOCATION_ID
+GROUP BY L.LOCATION_ID
+HAVING COUNT(D.DEPARTMENT_ID) > 1;
+
+4 1SELECT D.DEPARTMENT_NAME, D.LOCATION_ID, COUNT(E.EMPLOYEE_ID) AS NUM_EMPLOYEES, 
+  2         SUM(E.SALARY) AS TOTAL_SALARY, AVG(E.SALARY) AS AVG_SALARY
+  3  FROM DEPARTMENTS D
+  4  LEFT JOIN EMPLOYEES E ON D.DEPARTMENT_ID = E.DEPARTMENT_ID
+  5  GROUP BY D.DEPARTMENT_NAME, D.LOCATION_ID
+  6* ORDER BY D.LOCATION_ID ASC, AVG(E.SALARY) DESC;
+5 SELECT D.DEPARTMENT_NAME, D.LOCATION_ID, COUNT(E.EMPLOYEE_ID) AS NUM_EMPLOYEES,
+  2         SUM(E.SALARY) AS TOTAL_SALARY, AVG(E.SALARY) AS AVG_SALARY
+  3  FROM DEPARTMENTS D
+  4  LEFT JOIN EMPLOYEES E ON D.DEPARTMENT_ID = E.DEPARTMENT_ID
+  5  GROUP BY D.DEPARTMENT_NAME, D.LOCATION_ID
+  6  UNION ALL
+  7  SELECT 'NO DEPARTMENT' AS DEPARTMENT_NAME, NULL AS LOCATION_ID, 
+  8         COUNT(E.EMPLOYEE_ID) AS NUM_EMPLOYEES, SUM(E.SALARY) AS TOTAL_SALARY, 
+  9         AVG(E.SALARY) AS AVG_SALARY
+ 10  FROM EMPLOYEES E
+ 11* WHERE E.DEPARTMENT_ID IS NULL;
+6SELECT 
+  2      c.country_name AS Pais,
+  3      COUNT(e.employee_id) AS "Número d'empleats"
+  4  FROM 
+  5      countries c
+  6  LEFT JOIN 
+  7      locations l ON c.country_id = l.country_id
+  8  LEFT JOIN 
+  9      departments d ON l.location_id = d.location_id
+ 10  LEFT JOIN 
+ 11      employees e ON d.department_id = e.department_id
+ 12  GROUP BY 
+ 13      c.country_name
+ 14  HAVING 
+ 15      COUNT(e.employee_id) > 0
+ 16  ORDER BY 
+ 17*     c.country_name;
+
+7SELECT 
+  2      c.country_name AS Pais,
+  3      COUNT(e.employee_id) AS "Número d'empleats"
+  4  FROM 
+  5      countries c
+  6  LEFT JOIN 
+  7      locations l ON c.country_id = l.country_id
+  8  LEFT JOIN 
+  9      departments d ON l.location_id = d.location_id
+ 10  LEFT JOIN 
+ 11      employees e ON d.department_id = e.department_id
+ 12  GROUP BY 
+ 13      c.country_name
+ 14  ORDER BY 
+ 15*     COUNT(e.employee_id) DESC;
+
+8SELECT 
+  2      e.first_name || ' ' || e.last_name AS "Nom Empleat",
+  3      e.hire_date AS "Data de Contracte",
+  4      CASE 
+  5          WHEN m.first_name IS NOT NULL THEN m.first_name || ' ' || m.last_name
+  6          ELSE 'Sense Cap'
+  7      END AS "Nom Cap",
+  8      d.department_name AS "Nom Departament",
+  9      e.job_id AS "Ocupació"
+ 10  FROM 
+ 11      employees e
+ 12  LEFT JOIN 
+ 13      employees m ON e.manager_id = m.employee_id
+ 14  LEFT JOIN 
+ 15      departments d ON e.department_id = d.department_id
+ 16  ORDER BY 
+ 17*     e.employee_id;
+
+
+
+
